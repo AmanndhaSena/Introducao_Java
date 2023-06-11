@@ -12,29 +12,7 @@ class Fornecedor {
         this.nome = nome;
     }
 
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    // Getters e Setters omitidos
 
     @Override
     public String toString() {
@@ -55,60 +33,30 @@ class Produto {
         this.fornecedor = fornecedor;
     }
 
-    public void atualizarPreco(float percentual) {
-        float aumento = valor * (percentual / 100);
-        valor += aumento;
-    }
-
     public int getCodigo() {
         return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public float getValor() {
         return valor;
-    }
-
-    public void setValor(float valor) {
-        this.valor = valor;
     }
 
     public Fornecedor getFornecedor() {
         return fornecedor;
     }
 
-    public void setFornecedor(Fornecedor fornecedor) {
-        this.fornecedor = fornecedor;
+    public void atualizarPreco(float percentual) {
+        float aumento = valor * (percentual / 100);
+        valor += aumento;
     }
 
     @Override
     public String toString() {
         return "Código: " + codigo + " | Nome: " + nome + " | Valor: R$" + valor + " | " + fornecedor.toString();
-    }
-}
-public class TesteProduto {
-    public static void main(String[] args) {
-        Fornecedor fornecedor1 = new Fornecedor("123456789", "123456789", "Fornecedor 1");
-        Fornecedor fornecedor2 = new Fornecedor("987654321", "987654321", "Fornecedor 2");
-
-        Produto produto1 = new Produto(1, "Produto 1", 10.0f, fornecedor1);
-        Produto produto2 = new Produto(2, "Produto 2", 20.0f, fornecedor1);
-        Produto produto3 = new Produto(3, "Produto 3", 30.0f, fornecedor2);
-
-        System.out.println(produto1.toString());
-        System.out.println(produto2.toString());
-        System.out.println(produto3.toString());
     }
 }
 
@@ -141,36 +89,48 @@ class ConjuntoProdutos {
         System.out.println("Erro: Produto com código " + codigo + " não encontrado no conjunto.");
     }
 
-    public void atualizarProduto(Produto produto) {
+    public void atualizarProduto(int codigo, float percentual) {
         for (int i = 0; i < produtos.size(); i++) {
-            if (produtos.get(i).getCodigo() == produto.getCodigo()) {
+            if (produtos.get(i).getCodigo() == codigo) {
+                Produto produto = produtos.get(i);
+                produto.atualizarPreco(percentual);
                 produtos.set(i, produto);
-                System.out.println("Produto atualizado com sucesso.");
+                System.out.println("Preço do produto atualizado com sucesso.");
                 return;
             }
         }
-        System.out.println("Erro: Produto com código " + produto.getCodigo() + " não encontrado no conjunto.");
+        System.out.println("Erro: Produto com código " + codigo + " não encontrado no conjunto.");
     }
 
     public void mostrarProdutos() {
-        if (produtos.isEmpty()) {
-            System.out.println("Nenhum produto cadastrado.");
-            return;
-        }
         for (Produto produto : produtos) {
             System.out.println(produto.toString());
         }
     }
-
-    public void atualizarPrecoPorcentagem(int codigo, float percentual) {
-        for (Produto produto : produtos) {
-            if (produto.getCodigo() == codigo) {
-                produto.atualizarPreco(percentual);
-                System.out.println("Preço do produto atualizado.");
-                return;
-            }
-        }
-        System.out.println("Erro: Produto de código " + codigo + " não encontrado no conjunto.");
-    }
 }
 
+public class TesteProduto {
+    public static void main(String[] args) {
+        Fornecedor fornecedor1 = new Fornecedor("1234321", "123456789", "Zé Maria");
+        Fornecedor fornecedor2 = new Fornecedor("543212345", "987654321", "Claudio");
+
+        Produto produto1 = new Produto(1, "TV LCD", 3500.00f, fornecedor1);
+        Produto produto2 = new Produto(2, "Notebook", 2000.00f, fornecedor2);
+        Produto produto3 = new Produto(3, "Impressora", 232.00f, fornecedor2);
+
+        ConjuntoProdutos conjuntoProdutos = new ConjuntoProdutos();
+        conjuntoProdutos.inserirProduto(produto1);
+        conjuntoProdutos.inserirProduto(produto2);
+        conjuntoProdutos.inserirProduto(produto3);
+
+        conjuntoProdutos.mostrarProdutos();
+
+        conjuntoProdutos.removerProduto(2);
+
+        conjuntoProdutos.mostrarProdutos();
+
+        conjuntoProdutos.atualizarProduto(1, 10);
+
+        conjuntoProdutos.mostrarProdutos();
+    }
+}
